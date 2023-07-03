@@ -1,0 +1,139 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+  /**
+   * Run initializations on web app load.
+   */
+
+  date = new Date();
+  year = date.getFullYear();
+  month = date.getMonth() + 1;
+  day = date.getDate();
+  if(document.getElementById("current_date")){
+    document.getElementById("current_date").innerHTML = "今日日期："+ year + "/" + month + "/" + day ;
+  }
+  
+  // 根據dataArray的值，生成5列的趨勢table
+  function generateIndexTable_5(id,dataArray){
+
+      console.log(id);
+      console.log(dataArray);
+      
+      // 尋找table-body
+      var tbody = document.getElementById(id);
+      
+      // 迭代dataArray
+      dataArray.forEach(function(rowData) {
+        var row = document.createElement('tr');
+
+        var cell1 = document.createElement('td');
+        cell1.setAttribute("class","title-td");
+        cell1.appendChild(document.createTextNode(rowData[0]));
+        row.appendChild(cell1);
+
+        var cell2 = document.createElement('td');
+        //紅色：漲過頭＋ 多方趨勢＋ 藍色：震盪整理＋ 震盪整理 綠色：空方趨勢- 跌過頭-
+        //todo DIF=-1時，在趨勢數字後加上向下箭頭符號 反之上紅 下綠
+        //todo 短線(月線、季線)-1時，在短線(月線、季線)距離數字後加上向下箭頭符號 反之上紅 下綠
+        if(rowData[1]==="空方趨勢-" || rowData[1]===("跌過頭-")){
+          cell2.setAttribute("class","element-td-negative");
+        }else if(rowData[1].includes("震盪整理")){
+          cell2.setAttribute("class","element-td-arrage");
+        }else{
+          cell2.setAttribute("class","element-td");
+        }
+        if(rowData[2]==1){
+          rowData[1]+=" ↑";
+        }else{
+          rowData[1]+=" ↓";
+        }
+        cell2.appendChild(document.createTextNode(rowData[1]));
+        row.appendChild(cell2);
+
+        var cell3 = document.createElement('td');
+        if(rowData[6].startsWith("-")){
+          cell3.setAttribute("class","element-td-negative");
+        }else{
+          cell3.setAttribute("class","element-td");
+        }
+        if(rowData[3]==1){
+          rowData[6]+=" ↑";
+        }else{
+          rowData[6]+=" ↓";
+        }
+        cell3.appendChild(document.createTextNode(rowData[6]));
+        row.appendChild(cell3);
+
+        var cell4 = document.createElement('td');
+        if(rowData[7].startsWith("-")){
+          cell4.setAttribute("class","element-td-negative");
+        }else{
+          cell4.setAttribute("class","element-td");
+        }
+        if(rowData[4]==1){
+          rowData[7]+=" ↑";
+        }else{
+          rowData[7]+=" ↓";
+        }
+        cell4.appendChild(document.createTextNode(rowData[7]));
+        row.appendChild(cell4);
+
+        var cell5 = document.createElement('td');
+        if(rowData[8].startsWith("-")){
+          cell5.setAttribute("class","element-td-negative");
+        }else{
+          cell5.setAttribute("class","element-td");
+        }
+        if(rowData[5]==1){
+          rowData[8]+=" ↑";
+        }else{
+          rowData[8]+=" ↓";
+        }
+        cell5.appendChild(document.createTextNode(rowData[8]));
+        row.appendChild(cell5);
+
+        tbody.appendChild(row);
+      });
+  }
+
+  // 根據dataArray的值，生成5列的績效table
+  function generatePerformanceTable_5(id,dataArray){
+
+      console.log(id);
+      console.log(dataArray);
+      
+      // 尋找table-body
+      var tbody = document.getElementById(id);
+      
+      // 迭代dataArray
+      dataArray.forEach(function(rowData) {
+        var row = document.createElement('tr');
+
+        var cell1 = document.createElement('td');
+        cell1.setAttribute("class","title-td");
+        cell1.appendChild(document.createTextNode(rowData[0]));
+        row.appendChild(cell1);
+
+        var cell2 = document.createElement('td');
+        cell2.setAttribute("class","element-td-regular");
+        cell2.appendChild(document.createTextNode(rowData[1]));
+        row.appendChild(cell2);
+
+        var cell3 = document.createElement('td');
+        cell3.setAttribute("class","element-td-regular");
+        cell3.appendChild(document.createTextNode(rowData[2]));
+        row.appendChild(cell3);
+
+        var cell4 = document.createElement('td');
+        cell4.setAttribute("class","element-td-regular");
+        cell4.appendChild(document.createTextNode(rowData[3]));
+        row.appendChild(cell4);
+
+        var cell5 = document.createElement('td');
+        cell5.setAttribute("class","element-td-regular");
+        cell5.appendChild(document.createTextNode(rowData[4]));
+        row.appendChild(cell5);
+
+        tbody.appendChild(row);
+      });
+  }
+</script>

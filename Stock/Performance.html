@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_self">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Use a templated HTML printing scriptlet to import common stylesheet -->
+  <?!= include('Stylesheet') ?>
+  <script>
+    // Call the server here to retrieve any information needed to build the page.
+    var indexDatas = google.script.run.withSuccessHandler(handle).getCustomerData(<?= tokenId ?>);
+    function handle(datas) {
+      generatePerformanceTable_5("performance-body",datas);
+    };
+  </script>
+</head>
+
+<body>
+  <nav>
+    <div class="nav-wrapper">
+        <img>
+        <ul class="right">
+        <li><a href="<?= getScriptUrl(); ?>?tokenId=<?= tokenId ?>">Dashboard</a></li>
+        <li><a href="<?= getScriptUrl(); ?>?tokenId=<?= tokenId ?>&page=Performance">個人績效</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <table class="highlight centered striped">
+      <thead>
+        <tr>
+          <th colspan="5">投資人-
+            <?= name ?>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="performance-body">
+        <tr>
+          <td class="title-td col s4">入金日期</td>
+          <td class="title-td col s2">初始入金</td>
+          <td class="title-td col s2">投資淨利</td>
+          <td class="title-td col s2">投資淨利率</td>
+          <td class="title-td col s2">投資天數</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- Use a templated HTML printing scriptlet to import JavaScript. -->
+  <?!= include('JavaScript') ?>
+</body>
+
+
+</html>

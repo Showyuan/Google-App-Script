@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_self">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Use a templated HTML printing scriptlet to import common stylesheet -->
+  <?!= HtmlService.createHtmlOutputFromFile('Stylesheet').getContent(); ?>
+  <script>
+    // Call the server here to retrieve any information needed to build the page.
+    var indexDatas = google.script.run.withSuccessHandler(handle).getIndexData();
+    function handle(datas) {
+      generateIndexTable_5("table1-body",datas[0]);
+      generateIndexTable_5("table2-body",datas[1]);
+      generateIndexTable_5("table3-body",datas[2]);
+    };
+  </script>
+</head>
+
+<body>
+  <nav>
+    <div class="nav-wrapper">
+        <img>
+      <ul class="right">
+        <li><a href="<?= getScriptUrl(); ?>?tokenId=<?= tokenId ?>">Dashboard</a></li>
+        <li><a href="<?= getScriptUrl(); ?>?tokenId=<?= tokenId ?>&page=Performance">個人績效</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <div id="current_date">
+      </p>
+    </div>
+    <div>
+      <table class="highlight centered striped">
+        <thead>
+          <tr>
+            <th colspan="5">指數趨勢總覽</th>
+          </tr>
+        </thead>
+        <tbody id="table1-body">
+          <tr>
+            <td class="title-td col s4">指數</td>
+            <td class="title-td col s2">趨勢</td>
+            <td class="title-td col s2">短線距離</td>
+            <td class="title-td col s2">月線距離</td>
+            <td class="title-td col s2">季線距離</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <table class="highlight centered striped">
+        <thead>
+          <tr>
+            <th colspan="5">台股權值</th>
+          </tr>
+        </thead>
+        <tbody id="table2-body">
+          <tr>
+            <td class="title-td col s4"></td>
+            <td class="title-td col s2">趨勢</td>
+            <td class="title-td col s2">短線距離</td>
+            <td class="title-td col s2">月線距離</td>
+            <td class="title-td col s2">季線距離</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <table class="highlight centered striped">
+        <thead>
+          <tr>
+            <th colspan="5">美股權值</th>
+          </tr>
+        </thead>
+        <tbody id="table3-body">
+          <tr>
+            <td class="title-td"></td>
+            <td class="title-td">趨勢</td>
+            <td class="title-td">短線距離</td>
+            <td class="title-td">月線距離</td>
+            <td class="title-td">季線距離</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Use a templated HTML printing scriptlet to import JavaScript. -->
+  <?!= HtmlService.createHtmlOutputFromFile('JavaScript').getContent(); ?>
+</body>
+
+</html>

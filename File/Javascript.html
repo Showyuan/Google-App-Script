@@ -1,0 +1,543 @@
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+<!-- Materialize JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+  // ＝＝＝頁面初始化＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+    // document.addEventListener('DOMContentLoaded', function() {
+    //   initializePage();
+    // });
+
+    // async function initializePage(){
+    //   try {
+    //     showPreloader();
+    //     document.getElementById('id-input').value = '';
+    //     document.querySelector('form').reset();
+    //     removeAllEmployeeRow();
+    //     var employeeNames = ['employee-name', 'employee-name2', 'employee-name3', 'employee-name4', 'employee-name5', 'employee-name6', 'employee-name7'];
+    //     await Promise.allSettled([
+    //       initializeAllDatePicker(),
+    //       initializeAllTimePicker(),
+    //       getItemsAll(),
+    //       getCompanyName(),
+    //       ...employeeNames.map(name => getEmployees(name))
+    //     ]);
+    //     hidePreloader();
+    //     console.log('頁面初始化完成');
+    //   } catch(error) {
+    //     console.error('Error:', error);
+    //   }
+    // }
+
+    // async function _initializePage(){
+    //   try {
+    //     showPreloader();
+    //     document.getElementById('id-input').value = '';
+    //     document.querySelector('form').reset();
+    //     removeAllEmployeeRow();
+    //     await Promise.allSettled([
+    //       initializeAllDatePicker(),
+    //       initializeAllTimePicker(),
+    //     ]);
+    //     hidePreloader();
+    //     console.log('頁面初始化完成');
+    //   } catch(error) {
+    //     console.error('Error:', error);
+    //   }
+    // }
+    
+// ＝＝＝初始化日期時間選擇器＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+    // 初始化日期選擇器
+    function initializeAllDatePicker() {
+      return new Promise(function(resolve, reject) {
+        var elems = document.querySelectorAll('.datepicker');
+        var elemsCloseDate = document.getElementById('closeDate');
+        var options = {
+          autoClose: true,
+          format: 'yyyy-mm-dd',
+          showClearBtn: true,
+          setDefaultDate : true,
+          defaultDate: new Date(),
+        };
+        M.Datepicker.init(elems, options);
+        console.log('日期初始化完成');
+        resolve();
+      });
+    }
+
+    // 初始化時間選擇器
+    function initializeAllTimePicker() {
+      return new Promise(function(resolve, reject) {
+        var elems = document.querySelectorAll('.timepicker');
+        var options = {
+          autoClose: true,
+          showClearBtn: true,
+          defaultTime : '09:00',
+          twelveHour: false,
+        };
+        M.Timepicker.init(elems, options);
+        console.log('時間初始化完成');
+        resolve();
+      });
+    }
+
+// ＝＝＝初始化 Select 元件＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+    // 取得工作項目
+    function getItemsAll(){
+      return new Promise(function(resolve, reject) {
+        google.script.run.withSuccessHandler(function(items) {
+          if (items.length > 0) {
+            populateSelect(items);
+            console.log('工作項目初始化完成'); 
+            resolve();
+          }
+        }).getItemsAll();
+      });
+    }
+
+    // 取得公司名稱
+    function getCompanyName(){
+      return new Promise(function(resolve, reject) {
+        google.script.run.withSuccessHandler(function(items) {
+          if (items.length > 0) {
+            populateSelectCompany(items);
+            console.log('公司名稱初始化完成');  
+            resolve();
+          }
+        }).getCompanyName();
+      });
+    }    
+
+    // 取得員工清單
+    function getEmployees(selectId){
+      return new Promise(function(resolve, reject) {
+        google.script.run.withSuccessHandler(function(items) {
+          if (items.length > 0) {
+            populateSelectEmployee(selectId, items);
+            console.log('員工清單初始化完成');  
+            resolve();
+          }
+        }).getEmployees();
+      });
+    }
+    
+    // 工作項目 - 加入option
+    function populateSelect(items) {
+      var select = document.getElementById('item-select');
+      for (var i = 0; i < items.length; i++) {
+        var option = document.createElement('option');
+        option.value = items[i][1];
+        option.text = items[i][0];
+        option.dataset.info1 = items[i][2];
+        select.appendChild(option);
+      }
+      var elems = document.querySelector('#item-select');
+      var options = {
+        multiple: true,
+        dropdownOptions: select
+      };
+      M.FormSelect.init(elems, options);
+    }
+
+    // 公司清單 - 加入option
+    function populateSelectCompany(items) {
+      var select = document.getElementById('company-name');
+      for (var i = 0; i < items.length; i++) {
+        var option = document.createElement('option');
+        option.text = items[i];
+        option.value = items[i];
+        select.appendChild(option);
+      }
+      var elems = document.querySelector('#company-name');
+      var options = select;
+      M.FormSelect.init(elems, options);
+    }
+
+    // 員工清單 - 加入option
+    function populateSelectEmployee(selectId, items) {
+      var select = document.getElementById(selectId);
+      for (var i = 0; i < items.length; i++) {
+        var option = document.createElement('option');
+        option.text = items[i];
+        option.value = items[i];
+        select.appendChild(option);
+      }
+      var elems = document.querySelector('#' + selectId);
+
+      var options = {
+        multiple: true,
+        dropdownOptions: select
+      };
+      M.FormSelect.init(elems, options);
+    }
+
+// ＝＝＝新增員工＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+    var empArray = [true, false, false, false, false, false, false];
+
+    async function addEmployeeRow() {
+      var curr = 0;
+      for(var i = 1; i < 7; i++){
+        if(!empArray[i]){
+          empArray[i] = true;
+          curr = i + 1;
+          console.log("add emp" + curr);
+          break;
+        }
+      }
+
+      if(curr == 0){
+        showAlert("最多新增七個員工", 'red darken-4', 3000);
+        return;
+      }
+
+      var newAmount = document.getElementById('amount' + curr); // 員工薪資金額 
+      var newAmountCompany = document.getElementById('amount-company' + curr); // 員工薪資金額 
+
+      newAmount.value = document.getElementById('amount').value;
+      newAmountCompany.value = document.getElementById('amount-company').value;
+
+      var container = document.querySelector(".employee-row" + curr);
+      var name = document.querySelector("#employee-name" + curr);
+      var amountNum = document.querySelector("#amount" + curr);
+      var amountCompany = document.querySelector("#amount-company" + curr);
+
+      name.required = true;
+      amountNum.required = true;
+      amountCompany.required = true;
+      container.style.display = "block";
+      calculateAndDisplayDifference();
+      hidePreloader();
+    }
+
+    function _addEmployeeRow(){
+      return new Promise(function(resolve, reject) {
+        addEmployeeRow();
+        resolve();
+      });
+    }
+
+    function moveEmployeeRow(num) {
+      empArray[num] = false;
+      console.log("remove emp" + (num+1));
+      var rows = document.querySelectorAll(".employee-row2, .employee-row3, .employee-row4, .employee-row5, .employee-row6, .employee-row7");
+      var name = document.querySelectorAll("#employee-name2 , #employee-name3, #employee-name4, #employee-name5, #employee-name6, #employee-name7");
+      var amount = document.querySelectorAll("#amount2 , #amount3, #amount4, #amount5, #amount6, #amount7");
+      var amountCompany = document.querySelectorAll("#amount-company2 , #amount-company3, #amount-company4, #amount-company5, #amount-company6, #amount-company7");
+
+      var id = "employee-name" + (num+1);
+
+      $(id).val(""); // reset last_name text input field
+      M.updateTextFields(); // update the materialize text fields
+
+      $("#"+id).prop("selectedIndex", 0); // set the first option as selected
+      $("#"+id).formSelect(); // update material select 
+
+      rows[num-1].style.display = "none";
+      name[num-1].required = false;
+      amount[num-1].required = false;
+      amount[num-1].value = 0;
+      amountCompany[num-1].required = false;
+      amountCompany[num-1].value = 0;
+      calculateAndDisplayDifference();
+    }
+
+    function removeAllEmployeeRow() {
+      var rows = document.querySelectorAll(".employee-row2, .employee-row3, .employee-row4, .employee-row5, .employee-row6, .employee-row7");
+      var name = document.querySelectorAll("#employee-name2 , #employee-name3, #employee-name4, #employee-name5, #employee-name6, #employee-name7");
+      var amount = document.querySelectorAll("#amount2 , #amount3, #amount4, #amount5, #amount6, #amount7");
+      var amountCompany = document.querySelectorAll("#amount-company2 , #amount-company3, #amount-company4, #amount-company5, #amount-company6, #amount-company7");
+
+      for(var i = 0; i < rows.length; i++){
+        rows[i].style.display = "none";
+        name[i].required = false;
+        amount[i].required = false;
+        amount[i].value = 0;
+        amountCompany[i].required = false;
+        amountCompany[i].value = 0;
+      }
+      empArray = [true, false, false, false, false, false, false];
+    }
+
+// ＝＝＝匯入＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+  function searchData(){
+    var id = document.getElementById("id-input").value;
+    google.script.run.withSuccessHandler(function(items) {
+      if (items.length > 0) {
+        console.log(items);
+        fillData(items);
+      } else {
+        showAlert('查無此ID','red darken-4', 3000);
+      }
+    }).findDataByID(id);
+  }
+
+  async function fillData(items) {
+    // document.querySelector('form').reset();
+    M.updateTextFields();
+    removeAllEmployeeRow();
+
+    document.getElementById("date").value = items[0];
+    document.getElementById("deceased").value = items[2];
+    var options = document.getElementById("item-select").options;
+    for (var i = 0; i < options.length; i++) {
+      for (var y = 0; y < items[3].length; y ++){
+        if (options[i].text === items[3][y]) {
+          options[i].selected = true;
+          document.getElementById("item-select").dispatchEvent(new Event('change'));
+        }
+      }
+    }
+    document.getElementById("note").value = items[4];
+    var options = document.getElementById("company-name").options;
+    for (var i = 0; i < options.length; i++) {
+      if (options[i].text === items[5]) {
+        options[i].selected = true;
+        document.getElementById("company-name").dispatchEvent(new Event('change'));
+        break;
+      }
+    }
+    document.getElementById("funeralDirector").value = items[6];
+    var options = document.getElementById("employee-name").options;
+    for (var x = 0; x < items[7].length; x++) {
+      for (var i = 0; i < options.length; i++) {
+        if (options[i].text === items[7][x]) {
+          if(x === 0){
+            options[i].selected = true;
+            document.getElementById("employee-name").dispatchEvent(new Event('change')); 
+          } else {
+            await _addEmployeeRow();
+            var options2 = document.getElementById("employee-name" + (x+1)).options;
+            options2[i].selected = true;
+            document.getElementById("employee-name" + (x+1)).dispatchEvent(new Event('change')); 
+          }
+        }
+      }
+    }
+  }
+
+// ＝＝＝提交＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+    
+    // 提交：工單
+    function onTicketSubmit(event) {
+      event.preventDefault();  // 阻止表單的默認提交行為
+      showPreloader();
+      
+      // 取得表單資料
+      const form = document.querySelector('form');
+      const formData = new FormData(form);
+      const data = {};
+
+      // 檢查必填欄位是否填寫
+      let allFieldsFilled = true;
+      const requiredFields = form.querySelectorAll('[required]');
+      requiredFields.forEach(field => {
+        if (!field.value) {
+          allFieldsFilled = false;
+          console.log(field)
+          field.classList.add('invalid');
+        } else {
+          field.classList.remove('invalid');
+        }
+      });
+      
+      // 如果有任何一個必填欄位沒有填寫，就不執行提交
+      if (!allFieldsFilled) {
+        showAlert('請填寫必填欄位','red darken-4', 3000);
+        hidePreloader();
+        return;
+      }
+
+      // 將工作項目的選項用逗號分隔成字串回傳
+      const selectedOptions = Array.from(document.getElementById('item-select').options)
+        .filter(option => option.selected)
+        .map(option => option.text.split("(")[0]);
+      const selectString = selectedOptions.join(', ');
+
+      // 遇到item欄位時將selectString回傳，其餘依照key value規則回傳
+      for (const [key, value] of formData.entries()) {
+        if(key !== "item"){
+          data[key] = value;
+        }
+      }
+      data["item"] = selectString;
+      console.log(data);
+      
+      // 儲存表單
+      google.script.run.withSuccessHandler(() => {
+        _initializePage();
+        showAlert('提交成功','green', 3000);
+      }).processForm(data);
+    }
+
+    // 提交：待辦事項
+    function submitTodoList(event){
+      event.preventDefault();  // 阻止表單的默認提交行為
+      showPreloader();
+      
+      // 取得表單資料
+      const form = document.querySelector('form');
+      const formData = new FormData(form);
+      const data = {};
+      console.log("1. " + formData);
+
+      // 檢查必填欄位是否填寫
+      let allFieldsFilled = true;
+      const requiredFields = form.querySelectorAll('[required]');
+      requiredFields.forEach(field => {
+        if (!field.value) {
+          allFieldsFilled = false;
+          field.classList.add('invalid');
+        } else {
+          field.classList.remove('invalid');
+        }
+      });
+      
+      // 如果有任何一個必填欄位沒有填寫，就不執行提交
+      if (!allFieldsFilled) {
+        showAlert('請填寫必填欄位','red darken-4', 3000);
+        hidePreloader();
+        return;
+      }
+
+      // 將工作項目的選項用逗號分隔成字串回傳
+      const selectedOptions = Array.from(document.getElementById('item-select').options)
+        .filter(option => option.selected)
+        .map(option => option.text);
+      const selectString = selectedOptions.join(', ');
+
+      // 將員工姓名的選項用逗號分隔成字串回傳
+      const empOptions = Array.from(document.getElementById('employee-name').options)
+        .filter(option => option.selected)
+        .map(option => option.text);
+      const empString = empOptions.join(', ');
+
+      // 遇到item欄位時將selectString回傳，其餘依照key value規則回傳
+      for (const [key, value] of formData.entries()) {
+        if(key === "item"){
+          data["item"] = selectString;
+        } else if (key === "employeeName") {
+          data["employeeName"] = empString;
+        } else {
+          data[key] = value;
+        }
+      }
+      console.log(data);
+
+      // 儲存表單
+      google.script.run.withSuccessHandler(() => {
+        _initializePage();
+        showAlert('提交成功','green', 3000);
+      }).newTodoList(data);
+    } 
+// ＝＝＝匯出工單按鈕＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+    // 匯出工單
+    function exportMonthTable(event){
+      event.preventDefault();  // 阻止表單的默認提交行為
+      showAlert('正在計算，請稍候','blue', 7000);
+
+      // 取得startDate
+      const startDate = document.getElementById("startDate").value;
+      // 取得endDate
+      const endDate = document.getElementById("endDate").value;
+
+      if(startDate > endDate){
+        showAlert('開始日期不得大於結束日期','red', 5000);
+        return;
+      }
+
+      google.script.run.withSuccessHandler((link) => {
+        if(link.startsWith("Error")){
+          showAlert(link,'red', 5000);
+          return;
+        } 
+
+        window.open(link, "_blank");
+        showAlert('匯出成功','green', 3000);
+
+      }).exportMonthTable(startDate, endDate);
+    } 
+
+// ＝＝＝匯出薪資按鈕＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+    function exportSalaryTable(event){
+      event.preventDefault();  // 阻止表單的默認提交行為
+      showAlert('正在計算，請稍候','blue', 7000);
+
+      // 取得startDate
+      const startDate = document.getElementById("startDate").value;
+      // 取得endDate
+      const endDate = document.getElementById("endDate").value;
+
+      if(startDate > endDate){
+        showAlert('開始日期不得大於結束日期','red', 5000);
+        return;
+      }
+
+      google.script.run.withSuccessHandler((link) => {
+        if(link.startsWith("Error")){
+          showAlert(link,'red', 5000);
+          return;
+        }
+
+        window.open(link, "_blank");
+        showAlert('匯出成功','green', 3000);
+
+      }).exportSalaryTable(startDate, endDate);
+    }
+
+// ＝＝＝匯出公司請款單按鈕＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+    function exportInvoiceTable(event){
+      event.preventDefault();  // 阻止表單的默認提交行為
+      showAlert('正在計算，請稍候','blue', 7000);
+
+      // 取得startDate
+      const startDate = document.getElementById("startDate").value;
+      // 取得endDate
+      const endDate = document.getElementById("endDate").value;
+
+      if(startDate > endDate){
+        showAlert('開始日期不得大於結束日期','red', 5000);
+        return;
+      }
+
+      google.script.run.withSuccessHandler((link) => {
+        if(link.startsWith("Error")){
+          showAlert(link,'red', 5000);
+          return;
+        }
+
+        window.open(link, "_blank");
+        showAlert('匯出成功','green', 3000);
+
+      }).exportCompanyTable(startDate, endDate);
+    }
+
+// ＝＝＝preloader＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+    function showPreloader() {
+      document.querySelector('.content').style.display = "none";
+      document.querySelector('.preloader1').classList.add('progress');
+      document.querySelector('.preloader2').classList.add('indeterminate');
+    }
+
+    function hidePreloader() {
+      document.querySelector('.preloader1').classList.remove('progress');
+      document.querySelector('.preloader2').classList.remove('indeterminate');
+      document.querySelector('.content').style.display = "block";
+    }
+
+// ＝＝＝alert＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+    
+    function showAlert(message, color, duration) {
+      // 當需要顯示Alert時
+      M.toast({html: message, classes: color, displayLength: duration});
+    }
+
+</script>

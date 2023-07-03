@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+  <?!= include('Stylesheet'); ?>
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+  <!-- 導航欄 -->
+  <nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo">Ticket system</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="<?= getScriptUrl(); ?>">工單管理</a></li>
+        <li><a href="<?= getScriptUrl(); ?>?page=todo">待辦清單管理</a></li>
+      </ul>
+    </div>
+  </nav>
+  <!-- alert -->
+  <div class="alert hide"></div>
+  <div class="container">
+    <!-- preloader -->
+    <div class="preloader1">
+      <div class="preloader2"></div>
+    </div>
+    <!-- 主要內容 -->
+    <div class="content">
+      <!-- 案件資料 -->
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title">新增工單</span>
+          <div class="row">
+            <div class="input-field col s3">
+              <input id="id-input" type="text" class="validate" name="id">
+              <label for="id-input">ID</label>
+            </div>
+            <div class="input-field col s3">
+              <button class="btn" type="button" id="search-button" onclick="searchData(event);return false;">匯入
+            <i class="material-icons right">search</i>
+          </button>
+            </div>
+          </div>
+          </br>
+          <form>
+            <div class="row">
+              <div class="input-field col s6">
+                <input id="date" type="text" class="datepicker" name="date" required>
+                <label class="active" for="date">日期</label>
+              </div>
+              <div class="input-field col s6">
+                <input placeholder="案名" id="deceased" type="text" class="validate" name="deceased" required>
+                <label class="active" for="deceased">案名</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s6">
+                <select multiple id="item-select" name="item" required>
+                <option value="" disabled>請選擇</option>
+              </select>
+                <label>項目</label>
+              </div>
+              <div class="input-field col s6">
+                <input id="closeDate" type="text" class="datepicker" name="closeDate">
+                <label class="active" for="closeDate">結案日</label>
+              </div>
+            </div>
+            <div class="row employee-row1">
+              <div class="input-field col s3">
+                <select id="employee-name" name="employeeName" required>
+                <option value="" disabled selected>請選擇</option>
+              </select>
+                <label>員工名稱</label>
+              </div>
+              <div class="input-field col s3">
+                <input placeholder="0" id="amount" type="number" class="validate" name="amount" required>
+                <label class="active" for="amount">員工薪資金額</label>
+              </div>
+              <div class="input-field col s3">
+                <input placeholder="0" id="amount-company" type="number" class="validate" name="amountCompany" required>
+                <label class="active" for="amount-company">對公司金額</label>
+              </div>
+              <div class="input-field col s2">
+                <input id="adjustment" type="number" class="validate" min=0 name="adjustment">
+                <label class="active" for="adjustment">代收(預設負數)</label>
+              </div>
+              <div class="input-field col s1">
+                <a class="btn-floating btn-small" id="add-employee"
+                  onclick="addEmployeeRow()"><i class="material-icons">add</i></a>
+              </div>
+            </div>
+            <div class="row employee-row2" style="display: none">
+              <div class="input-field col s3">
+                <select id="employee-name2" name="employeeName2">
+                <option value="" disabled selected>請選擇</option>
+              </select>
+                <label>員工名稱</label>
+              </div>
+              <div class="input-field col s3">
+                <input placeholder="0" id="amount2" type="number" class="validate" name="amount2">
+                <label class="active" for="amount2">員工薪資金額</label>
+              </div>
+              <div class="input-field col s3">
+                <input placeholder="0" id="amount-company2" type="number" class="validate" name="amountCompany2">
+                <label class="active" for="amount-company2">對公司金額</label>
+              </div>
+              <div class="input-field col s2">
+                <input id="adjustment2" type="number" class="validate" min=0 name="adjustment2">
+                <label class="active" for="adjustment2">代收(預設負數)</label>
+              </div>
+              <div class="input-field col s1">
+                <a class="btn-floating btn-small" id="add-employee2"
+                  onclick="moveEmployeeRow(1)"><i class="material-icons">cancel</i></a>
+              </div>
+            </div>
+            <div class="row employee-row3" style="display: none">
+              <div class="input-field col s3">
+                <select id="employee-name3" name="employeeName3">
+                <option value="" disabled selected>請選擇</option>
+              </select>
+                <label>員工名稱</label>
+              </div>
+              <div class="input-field col s3">
+                <input placeholder="0" id="amount3" type="number" class="validate" name="amount3">
+                <label class="active" for="amount3">員工薪資金額</label>
+              </div>
+              <div class="input-field col s3">
+                <input placeholder="0" id="amount-company3" type="number" class="validate" name="amountCompany3">
+                <label class="active" for="amount-company3">對公司金額</label>
+              </div>
+              <div class="input-field col s2">
+                <input id="adjustment3" type="number" class="validate" min=0 name="adjustment3">
+                <label class="active" for="adjustment3">代收(預設負數)</label>
+              </div>
+              <div class="input-field col s1">
+                <a class="btn-floating btn-small" id="add-employee3"
+                  onclick="moveEmployeeRow(2)"><i class="material-icons">cancel</i></a>
+              </div>
+            </div>
+            <div class="row employee-row4" style="display: none">
+              <div class="input-field col s3">
+                <select id="employee-name4" name="employeeName4">
+                <option value="" disabled selected>請選擇</option>
+              </select>
+                <label>員工名稱</label>
+              </div>
+              <div class="input-field col s3">
+                <input placeholder="0" id="amount4" type="number" class="validate" name="amount4">
+                <label class="active" for="amount4">員工薪資金額</label>
+              </div>
+              <div class="input-field col s3">
+                <input placeholder="0" id="amount-company4" type="number" class="validate" name="amountCompany4">
+                <label class="active" for="amount-company4">對公司金額</label>
+              </div>
+              <div class="input-field col s2">
+                <input id="adjustment4" type="number" class="validate" min=0 name="adjustment4">
+                <label class="active" for="adjustment4">代收(預設負數)</label>
+              </div>
+              <div class="input-field col s1">
+                <a class="btn-floating btn-small" id="add-employee4"
+                  onclick="moveEmployeeRow(3)"><i class="material-icons">cancel</i></a>
+              </div>
+            </div>
+            <div class="row employee-row5" style="display: none">
+              <div class="input-field col s3">
+                <select id="employee-name5" name="employeeName5">
+                <option value="" disabled selected>請選擇</option>
+              </select>
+                <label>員工名稱</label>
+              </div>
+              <div class="input-field col s3">
+                <input placeholder="0" id="amount5" type="number" class="validate" name="amount5">
+                <label class="active" for="amount5">員工薪資金額</label>
+              </div>
+              <div class="input-field col s3">
+                <input placeholder="0" id="amount-company5" type="number" class="validate" name="amountCompany5">
+                <label class="active" for="amount-company5">對公司金額</label>
+              </div>
+              <div class="input-field col s2">
+                <input id="adjustment5" type="number" class="validate" min=0 name="adjustment5">
+                <label class="active" for="adjustment5">代收(預設負數)</label>
+              </div>
+              <div class="input-field col s1">
+                <a class="btn-floating btn-small" id="add-employee5"
+                  onclick="moveEmployeeRow(4)"><i class="material-icons">cancel</i></a>
+              </div>
+            </div>
+            <div class="row employee-row6" style="display: none">
+              <div class="input-field col s3">
+                <select id="employee-name6" name="employeeName6">
+                <option value="" disabled selected>請選擇</option>
+              </select>
+                <label>員工名稱</label>
+              </div>
+              <div class="input-field col s3">
+                <input placeholder="0" id="amount6" type="number" class="validate" name="amount6">
+                <label class="active" for="amount6">員工薪資金額</label>
+              </div>
+              <div class="input-field col s3">
+                <input placeholder="0" id="amount-company6" type="number" class="validate" name="amountCompany6">
+                <label class="active" for="amount-company6">對公司金額</label>
+              </div>
+              <div class="input-field col s2">
+                <input id="adjustment6" type="number" class="validate" min=0 name="adjustment6">
+                <label class="active" for="adjustment6">代收(預設負數)</label>
+              </div>
+              <div class="input-field col s1">
+                <a class="btn-floating btn-small" id="add-employee6"
+                  onclick="moveEmployeeRow(5)"><i class="material-icons">cancel</i></a>
+              </div>
+            </div>
+            <div class="row employee-row7" style="display: none">
+              <div class="input-field col s3">
+                <select id="employee-name7" name="employeeName7">
+                <option value="" disabled selected>請選擇</option>
+              </select>
+                <label>員工名稱</label>
+              </div>
+              <div class="input-field col s3">
+                <input placeholder="0" id="amount7" type="number" class="validate" name="amount7">
+                <label class="active" for="amount7">員工薪資金額</label>
+              </div>
+              <div class="input-field col s3">
+                <input placeholder="0" id="amount-company7" type="number" class="validate" name="amountCompany7">
+                <label class="active" for="amount-company7">對公司金額</label>
+              </div>
+              <div class="input-field col s2">
+                <input id="adjustment7" type="number" class="validate" min=0 name="adjustment7">
+                <label class="active" for="adjustment7">代收(預設負數)</label>
+              </div>
+              <div class="input-field col s1">
+                <a class="btn-floating btn-small" id="add-employee7"
+                  onclick="moveEmployeeRow(6)"><i class="material-icons">cancel</i></a>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s6">
+                <select id="company-name" name="companyName" required>
+                <option value="" disabled selected>請選擇</option>
+              </select>
+                <label>公司名稱</label>
+              </div>
+              <div class="input-field col s6">
+                <input id="funeralDirector" type="text" class="validate" name="funeralDirector">
+                <label class="active" for="funeralDirector">禮儀師</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s6">
+                <input placeholder="0" id="profit" type="text" name="profit" readonly>
+                <label class="active" for="profit">利潤(readonly)</label>
+              </div>
+              <div class="input-field col s6">
+                <input id="note" type="text" class="validate" name="note">
+                <label class="active" for="note">備註</label>
+              </div>
+            </div>
+            <button class="btn" type="submit" id="submit-btn" onclick="onTicketSubmit(event); return false;">提交
+            <i class="material-icons right">send</i>
+          </button>
+          </form>
+        </div>
+      </div>
+      <!-- 匯出功能 -->
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title">匯出工單</span>
+          </br>
+          <form>
+            <div class="row">
+              <div class="input-field col s6">
+                <input id="startDate" type="text" class="datepicker" name="startDate">
+                <label for="startDate">篩選開始日</label>
+              </div>
+              <div class="input-field col s6">
+                <input id="endDate" type="text" class="datepicker" name="endDate">
+                <label for="endDate">篩選結束日</label>
+              </div>
+            </div>
+            <button class="btn" type="submit" id="export-month-btn" onclick="exportMonthTable(event); return false;"
+              >匯出報表
+              <i class="material-icons right">cloud_download</i>
+            </button>
+            <button class="btn" type="submit" id="export-salary-btn" onclick="exportSalaryTable(event); return false;"
+              >匯出薪資單
+              <i class="material-icons right">cloud_download</i>
+            </button>
+            <button class="btn" type="submit" id="export-invoice-btn" onclick="exportInvoiceTable(event); return false;"
+              >匯出請款單
+              <i class="material-icons right">cloud_download</i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <?!= include('JavaScript'); ?>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      initializePage();
+    });
+
+    async function initializePage(){
+      try {
+        showPreloader();
+        document.getElementById('id-input').value = '';
+        document.querySelector('form').reset();
+        M.updateTextFields();
+        removeAllEmployeeRow();
+        var employeeNames = ['employee-name', 'employee-name2', 'employee-name3', 'employee-name4', 'employee-name5', 'employee-name6', 'employee-name7'];
+        await Promise.allSettled([
+          initializeAllDatePicker(),
+          initializeAllTimePicker(),
+          getItemsAll(),
+          getCompanyName(),
+          ...employeeNames.map(name => getEmployees(name))
+        ]);
+        hidePreloader();
+        console.log('頁面初始化完成');
+      } catch(error) {
+        console.error('Error:', error);
+      }
+    }
+
+    async function _initializePage(){
+      try {
+        showPreloader();
+        document.getElementById('id-input').value = '';
+        document.querySelector('form').reset();
+        M.updateTextFields();
+        removeAllEmployeeRow();
+        await Promise.allSettled([
+          initializeAllDatePicker(),
+          initializeAllTimePicker(),
+        ]);
+        hidePreloader();
+        console.log('頁面初始化完成');
+      } catch(error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // 員工薪資金額
+    var select = document.getElementById('item-select'); // 員工薪資金額
+    var amount = document.getElementById('amount'); // 員工薪資金額
+    var amount2 = document.getElementById('amount2'); // 員工薪資金額2
+    var amount3 = document.getElementById('amount3'); // 員工薪資金額3
+    var amount4 = document.getElementById('amount4'); // 員工薪資金額4
+    var amount5 = document.getElementById('amount5'); // 員工薪資金額5
+    var amount6 = document.getElementById('amount6'); // 員工薪資金額6
+    var amount7 = document.getElementById('amount7'); // 員工薪資金額7
+
+    // 對公司金額
+    var amountComp = document.getElementById('amount-company'); // 對公司金額
+    var amountComp2 = document.getElementById('amount-company2'); // 對公司金額2
+    var amountComp3 = document.getElementById('amount-company3'); // 對公司金額3
+    var amountComp4 = document.getElementById('amount-company4'); // 對公司金額4
+    var amountComp5 = document.getElementById('amount-company5'); // 對公司金額5
+    var amountComp6 = document.getElementById('amount-company6'); // 對公司金額6
+    var amountComp7 = document.getElementById('amount-company7'); // 對公司金額7
+
+    // 利潤
+    var profit = document.getElementById('profit'); // 利潤
+
+    select.addEventListener('change', function() {
+      // 選出已選的欄位把value加總
+      var selectedOptions = select.querySelectorAll('option:checked');
+      var totalEmp = 0;
+      var totalComp = 0;
+      for (var i = 0; i < selectedOptions.length; i++) {
+        totalEmp += parseInt(selectedOptions[i].value);
+        totalComp += parseInt(selectedOptions[i].dataset.info1);
+      }
+      amount.value = totalEmp;
+      amountComp.value = totalComp;
+      calculateAndDisplayDifference();
+    });
+    
+    // 監聽每個員工薪資金額欄位的變化
+    amount.addEventListener('input', calculateAndDisplayDifference);
+    amount2.addEventListener('input', calculateAndDisplayDifference);
+    amount3.addEventListener('input', calculateAndDisplayDifference);
+    amount4.addEventListener('input', calculateAndDisplayDifference);
+    amount5.addEventListener('input', calculateAndDisplayDifference);
+    amount6.addEventListener('input', calculateAndDisplayDifference);
+    amount7.addEventListener('input', calculateAndDisplayDifference);
+
+    // 監聽每個對公司金額欄位的變化
+    amountComp.addEventListener('input', calculateAndDisplayDifference);
+    amountComp2.addEventListener('input', calculateAndDisplayDifference);
+    amountComp3.addEventListener('input', calculateAndDisplayDifference);
+    amountComp4.addEventListener('input', calculateAndDisplayDifference);
+    amountComp5.addEventListener('input', calculateAndDisplayDifference);
+    amountComp6.addEventListener('input', calculateAndDisplayDifference);
+    amountComp7.addEventListener('input', calculateAndDisplayDifference);
+
+    function calculateAndDisplayDifference() {
+      var employeeAmounts = [
+        amount.value,
+        amount2.value,
+        amount3.value,
+        amount4.value,
+        amount5.value,
+        amount6.value,
+        amount7.value
+      ];
+
+      var companyAmounts = [
+        amountComp.value,
+        amountComp2.value,
+        amountComp3.value,
+        amountComp4.value,
+        amountComp5.value,
+        amountComp6.value,
+        amountComp7.value
+      ];
+
+      var totalEmployeeAmount = employeeAmounts.reduce(function(sum, value) {
+        return sum + parseInt(value);
+      }, 0);
+
+      var totalCompanyAmount = companyAmounts.reduce(function(sum, value) {
+        return sum + parseInt(value);
+      }, 0);
+
+      profit.value = totalCompanyAmount - totalEmployeeAmount;
+    }
+    
+  </script>
+</body>
+
+</html>

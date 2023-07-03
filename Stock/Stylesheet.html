@@ -1,0 +1,174 @@
+<!-- This CSS package applies Google styling; it should always be included. -->
+<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css">
+
+<style>
+  .nav-wrapper {
+    background-color: #000000;
+  }
+
+  .content {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .title {
+    height: 15vh;
+    background-color: #7CCCCC;
+  }
+
+  nav .brand-logo {
+    float: left;
+    position: relative;
+  }
+
+  img {
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
+
+  .nav-wrapper ul a {
+    color: #FCFCFC;
+  }
+
+  table {
+    border-collapse: initial;
+    padding: 5%;
+  }
+
+  th {
+    font-size: 2em;
+    font-weight: bold;
+    color: #6C6C6C;
+  }
+
+  .title-td {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #6C6C6C;
+  }
+
+  .element-td {
+    font-size: 1.5em;
+    color: #FF2D2D;
+  }
+
+  .element-td-regular {
+    font-size: 1.5em;
+    color: #4F4F4F;
+  }
+
+  .element-td-negative {
+    font-size: 1.5em;
+    color: #02C874;
+  }
+
+  .element-td-arrage {
+    font-size: 1.5em;
+    color: #2828FF;
+  }
+
+  .element-td-over {
+    font-size: 1.5em;
+    color: #796400;
+  }
+
+  .result-xy {
+    height: 248px;
+    width: 668px;
+    max-width: calc(100% - 40px);
+    margin: 80px 0 80px 40px;
+    font-size: 0;
+    border-top: 1px solid #E0E2E6;
+    border-bottom: 1px solid #E0E2E6;
+    background: linear-gradient(to top, #E0E2E6, #E0E2E6 1px, transparent 1px);
+    background-size: 100% 50px;
+    position: relative;
+    text-align: center;
+  }
+
+  .result-xy::after {
+    content: '250\A 200\A 150\A 100\A 50\A 0';
+    white-space: pre-wrap;
+    position: absolute;
+    font-size: 14px;
+    line-height: 50px;
+    top: -26px;
+    left: -1.5em;
+  }
+
+  .result-bg {
+    display: inline-block;
+    width: calc((100% - 16px * 13) / 12);
+    height: 100%;
+    background-color: #eee;
+    position: relative;
+  }
+
+  .result-bg+.result-bg {
+    margin-left: 16px;
+  }
+
+  .result-bg::after {
+    /* content: attr(data-month)'月'; */
+    position: absolute;
+    bottom: -2em;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 12px;
+    color: gray;
+  }
+
+  .result-bar {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    background-color: #69a8f7;
+  }
+
+  .result-bar>s {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background-color: #fff;
+    color: #97cd74;
+    border: 2px solid;
+    border-radius: 50%;
+    top: 15px;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
+
+  .result-bar i[line] {
+    position: absolute;
+    box-sizing: border-box;
+    border-left: 3px solid #fff;
+    border-right: 3px solid #fff;
+    height: 2px;
+    background-color: #97cd74;
+    transform-origin: left center;
+    left: 50%;
+    top: 50%;
+    margin-top: -1px;
+    -ms-pointer-events: none;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  #current_date {
+    font-size: 1.5em;
+    color: #6C6C6C;
+    text-align: center;
+    padding: 10px;
+  }
+</style>

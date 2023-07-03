@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+  <?!= include('Stylesheet'); ?>
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+  <!-- 導航欄 -->
+  <nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo">Ticket system</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="<?= getScriptUrl(); ?>">工單管理</a></li>
+        <li><a href="<?= getScriptUrl(); ?>?page=todo">待辦清單管理</a></li>
+      </ul>
+    </div>
+  </nav>
+  <!-- alert -->
+  <div class="alert hide"></div>
+  <div class="container">
+    <!-- preloader -->
+    <div class="preloader1">
+      <div class="preloader2"></div>
+    </div>
+    <!-- 主要內容 -->
+    <div class="content">
+      <!-- 待辦事項功能 -->
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title">新增待辦事項</span>
+          </br>
+          <form>
+            <div class="row">
+              <div class="input-field col s4">
+                <input id="date" type="text" class="datepicker" name="date" required>
+                <label for="date">日期</label>
+              </div>
+              <div class="input-field col s4">
+                <input id="startTime" type="text" class="timepicker" name="startTime" required>
+                <label for="startTime">開始時間</label>
+              </div>
+              <div class="input-field col s4">
+                <input id="endTime" type="text" class="timepicker" name="endTime" required>
+                <label for="endTime">結束時間</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s6">
+                <input id="deceased" type="text" class="validate" name="deceased" required>
+                <label for="deceased">案名</label>
+              </div>
+              <div class="input-field col s6">
+                <select multiple id="item-select" name="item" required>
+                <option value="" disabled>請選擇</option>
+              </select>
+                <label>項目</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s6">
+                <select id="company-name" name="companyName" required>
+                <option value="" disabled selected>請選擇</option>
+              </select>
+                <label>公司名稱</label>
+              </div>
+              <div class="input-field col s6">
+                <input id="funeral-director" type="text" class="validate" name="funeralDirector">
+                <label for="funeralDirector">禮儀師</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s6">
+                <select multiple id="employee-name" name="employeeName" required>
+                <option value="" disabled>請選擇</option>
+              </select>
+                <label>員工名稱</label>
+              </div>
+              <div class="input-field col s6">
+                <input id="address" type="text" class="validate" name="address" required>
+                <label for="address">地址</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="note" type="text" class="validate" name="note">
+                <label for="note">備註</label>
+              </div>
+            </div>
+            <button class="btn waves-effect waves-light" id="submit-todo-btn" onclick="submitTodoList(event); return false;">提交
+            <i class="material-icons right">send</i>
+          </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <?!= include('JavaScript'); ?>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      initializePage();
+    });
+
+    async function initializePage(){
+      try {
+        showPreloader();
+        document.querySelector('form').reset();
+        removeAllEmployeeRow();
+        await Promise.allSettled([
+          initializeAllDatePicker(),
+          initializeAllTimePicker(),
+          getItemsAll(),
+          getCompanyName(),
+          getEmployees('employee-name')
+        ]);
+        hidePreloader();
+        console.log('頁面初始化完成');
+      } catch(error) {
+        console.error('Error:', error);
+      }
+    }
+
+    async function _initializePage(){
+      try {
+        showPreloader();
+        document.querySelector('form').reset();
+        removeAllEmployeeRow();
+        await Promise.allSettled([
+          initializeAllDatePicker(),
+          initializeAllTimePicker(),
+        ]);
+        hidePreloader();
+        console.log('頁面初始化完成');
+      } catch(error) {
+        console.error('Error:', error);
+      }
+    }
+
+  </script>
+</body>
+
+</html>
